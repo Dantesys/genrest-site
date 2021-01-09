@@ -8,16 +8,16 @@ html, body, #root{
   height: 100vh;
 }
 body{
-  background-color: #FFFFFF;
+  background-image: url("./assets/makebg.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center; 
+	background-size: cover;
+	background-color: #565656;
 }
 body,
 input,
 button,
 textarea {
 font: 500 1.6rem Poppins;
-}
-#root{
-  display:flex;
-  align-items: center;
-  justify-content: center;
 }
