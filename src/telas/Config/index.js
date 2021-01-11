@@ -8,14 +8,13 @@ import MesaProvider from '../../service/provider/MesaProvider.js';
 import {useHistory} from 'react-router-dom';
 import image from '../../assets/mesa.png';
 import DHeader from '../../components/Dheader.js';
-function Dashboard({history}){
+function Config({history}){
     history=useHistory();
     const [user, setUser] = React.useState(localStorage.getItem("user"));
     const [rest , setRest] = React.useState(null);
     const [mesas, setMesas] = React.useState([]);
     React.useEffect(() => {
         getData();
-        getMesas();
         if(!user){
             history.push({pathname:"/"});
         }
@@ -29,21 +28,13 @@ function Dashboard({history}){
             throw err;
         }
     }
-    async function getMesas(){
-        try{
-            let r = await MesaProvider.getData();
-            setMesas(r);
-        }catch(err){
-            throw err;
-        }
-    }
     return(
         <Container fluid className="bgimgfull">
             <Helmet>
                 {rest && rest.rest_nome ? (
-                    <title>{rest.rest_nome} - Dashboard</title>
+                    <title>{rest.rest_nome} - Configuração</title>
                 ):(
-                    <title>Dashboard</title>
+                    <title>Configuração</title>
                 )}
             </Helmet>
             <DHeader dado={{rest:rest,user:user}}/>
@@ -51,21 +42,6 @@ function Dashboard({history}){
                 <Row>
                     <Col className="text-center cmain justify-content-center">
                         <Row>
-                            {mesas.map((item) => (
-                                <Col>
-                                    <Card className={item.mes_status}>
-                                        <Card.Header>
-                                            {item.mes_ID}
-                                        </Card.Header>
-                                        <Card.Body>
-                                            <Card.Title>{item.mes_status}</Card.Title>
-                                            <Card.Text>
-                                                <img src={image} width="150px" height="150px" />
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            ))}
                         </Row>
                     </Col>
                 </Row>
@@ -74,4 +50,4 @@ function Dashboard({history}){
     );
 }
 
-export default Dashboard;
+export default Config;

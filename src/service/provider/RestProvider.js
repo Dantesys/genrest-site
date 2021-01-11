@@ -15,8 +15,17 @@ var login = async (email,senha) => {
         throw err;
     }
 }
+var cadastroCliente = async(data) => {
+    try{
+        let r = await api.post(`/cadastro/cliente`,{data});
+        return r.data;
+    }catch(err){
+        throw err;
+    }
+}
 const RestProvider = {
     getData:getData,
-    login:login
+    login:login,
+    cadastroCliente:cadastroCliente
 }
 export default RestProvider;
