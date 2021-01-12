@@ -131,7 +131,7 @@ function Cardapio({history}){
                 }
                 let r = await CardapioProvider.editComida(cid,comida);
                 setCardapio(cardapio => [...cardapio, r]);
-                comidaClose();
+                editcomidaClose();
                 alert("Comida editada com sucesso!");
             }catch(err){
                 throw err;
@@ -145,7 +145,7 @@ function Cardapio({history}){
         setNome(item.com_nome);
         setPreco(item.com_preco.toString().replace(".",","));
         setID(item.com_ID);
-        editcomidaClose();
+        editcomidaShow();
     }
     return(
         <Container fluid className="bgimgfull">
@@ -214,7 +214,7 @@ function Cardapio({history}){
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Foto</Form.Label>
-                            <Form.File label="Image" data-browse="Buscar" custom value={image} onChange={(event)=>{setImage(event.target.value)}}/>
+                            <Form.File label="Image" id="img" data-browse="Buscar" custom value={image} onChange={(event)=>{setImage(event.target.value)}}/>
                         </Form.Group>
                         <Form.Group>
                             <Button variant="success" onClick={()=>{add()}}>Adicionar</Button>
@@ -241,8 +241,8 @@ function Cardapio({history}){
                             <Form.Control name="desc" type="text" value={desc} onChange={(event)=>{setDesc(event.target.value)}} required="required"/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Imagem</Form.Label>
-                            <Form.File name="img" type="file" id="img" value={image} onChange={(event)=>{setImage(event.target.value)}} required="required"/>
+                            <Form.Label>Foto</Form.Label>
+                            <Form.File label="Image" id="img" data-browse="Buscar" custom value={image} onChange={(event)=>{setImage(event.target.value)}}/>
                         </Form.Group>
                         <Form.Group>
                             <Button variant="success" onClick={()=>{edit(id)}}>Salvar</Button>
