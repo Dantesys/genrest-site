@@ -1,13 +1,16 @@
 import React from 'react';
 import './index.css';
-import { Container, Row, Col, Navbar, Nav, Form, Button, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Form, Modal, Nav, Navbar} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Helmet } from 'react-helmet';
 import RestProvider from '../../service/provider/RestProvider.js';
+import CardapioProvider from '../../service/provider/CardapioProvider.js';
 import {useHistory} from 'react-router-dom';
-function Home({history}){
+function Cad({history}){
     history=useHistory();
+    const [user, setUser] = React.useState(localStorage.getItem("user"));
     const [rest , setRest] = React.useState(null);
+    const [cardapio, setCardapio] = React.useState([]);
     const [show, setShow] = React.useState(false);
     const [show2, setShow2] = React.useState(false);
     const [email,setEmail] = React.useState("");
@@ -20,12 +23,25 @@ function Home({history}){
     const cadastroShow = () => setShow2(true);
     React.useEffect(() => {
         getData();
+        getCardapio();
+        if(!user){
+            history.push({pathname:"/"});
+        }
     }, []);
     async function getData(){
         try{
             let r = await RestProvider.getData();
             setRest(r);
             return r;
+        }catch(err){
+            throw err;
+        }
+    }
+    async function getCardapio(){
+        try{
+            let r = await CardapioProvider.getData();
+            console.log(r);
+            setCardapio(r);
         }catch(err){
             throw err;
         }
@@ -63,9 +79,9 @@ function Home({history}){
         <Container fluid className="bgimgfull">
             <Helmet>
                 {rest && rest.rest_nome ? (
-                    <title>{rest.rest_nome} - Inicio</title>
+                    <title>{rest.rest_nome} - Cardapio</title>
                 ):(
-                    <title>Inicio</title>
+                    <title>Cardapio</title>
                 )}
             </Helmet>
             <header>
@@ -96,17 +112,29 @@ function Home({history}){
             </header>
             <main>
                 <Row>
-                    <Col className="align-self-center">
-                        {rest && rest.rest_nome ? (
-                            <h2>Bem vindo ao restaurante {rest.rest_nome}</h2>
-                        ):(
-                            <h2>Bem vindo ao restaurante</h2>
-                        )}
-                        {rest && rest.rest_desc ? (
-                            <p>{rest.rest_desc}</p>
-                        ):(
-                            <p></p>
-                        )}
+                    <Col className="text-center">
+                        <Row>
+                            {cardapio.map((item) => (
+                                <Col>
+                                    <Card>
+                                        <Card.Header>
+                                            {item.com_nome}
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Card.Title>
+                                                <img src={item.com_img} width="150px" height="150px" />
+                                            </Card.Title>
+                                            <Card.Text>
+                                                R$ {item.com_preco.toString().replace(".",",")}
+                                            </Card.Text>
+                                            <Card.Text>
+                                                {item.com_desc}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
                     </Col>
                 </Row>
             </main>
@@ -171,5 +199,4 @@ function Home({history}){
         </Container>
     );
 }
-
-export default Home;
+export default Cad;

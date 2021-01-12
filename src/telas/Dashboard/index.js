@@ -4,22 +4,29 @@ import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Helmet } from 'react-helmet';
 import RestProvider from '../../service/provider/RestProvider.js';
-import MesaProvider from '../../service/provider/MesaProvider.js';
 import {useHistory} from 'react-router-dom';
-import image from '../../assets/mesa.png';
 import DHeader from '../../components/Dheader.js';
 function Dashboard({history}){
     history=useHistory();
     const [user, setUser] = React.useState(localStorage.getItem("user"));
     const [rest , setRest] = React.useState(null);
-    const [mesas, setMesas] = React.useState([]);
+    const [res, setRes] = React.useState([]);
     React.useEffect(() => {
         getData();
-        getMesas();
+        getRes();
         if(!user){
             history.push({pathname:"/"});
         }
     }, []);
+    async function getRes(){
+        try{
+            let r = await RestProvider.getRes();
+            setRes(r);
+            return r;
+        }catch(err){
+            throw err;
+        }
+    }
     async function getData(){
         try{
             let r = await RestProvider.getData();
@@ -29,13 +36,30 @@ function Dashboard({history}){
             throw err;
         }
     }
-    async function getMesas(){
+    async function del(id,key){
         try{
-            let r = await MesaProvider.getData();
-            setMesas(r);
+            let r = await RestProvider.delRes(id);
+            let res_=res;
+            res_.splice(key,1);
+            setRes(res_ => [...res_]);
         }catch(err){
             throw err;
         }
+    }
+    function fixDate(data,id){
+        let r = null;
+        let dia = new Date(data);
+        switch (id){
+            case 1:
+                r = dia.getDate();
+                break;
+            case 2:
+                r = dia.getMonth()+1;
+                break;
+            case 3:
+                r = dia.getFullYear();
+        }
+        return r;
     }
     return(
         <Container fluid className="bgimgfull">
@@ -51,20 +75,15 @@ function Dashboard({history}){
                 <Row>
                     <Col className="text-center cmain justify-content-center">
                         <Row>
-                            {mesas.map((item) => (
+                            {res.map((item,key) => (
                                 <Col>
-                                    <Card className={item.mes_status}>
-                                        <Card.Header>
-                                            {item.mes_ID}
-                                        </Card.Header>
-                                        <Card.Body>
-                                            <Card.Title>{item.mes_status}</Card.Title>
-                                            <Card.Text>
-                                                <img src={image} width="150px" height="150px" />
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
+                                <Card>
+                                    <Card.Body>
+                                        <Card.Title>Reserva de {item.res_pessoa.pes_nome} para {fixDate(item.res_data,1)}/{fixDate(item.res_data,2)}/{fixDate(item.res_data,3)}</Card.Title>
+                                        <Card.Text><Button variant="outline-danger" onClick={()=>{del(item.res_ID,key)}}>Cancelar reserva</Button></Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
                             ))}
                         </Row>
                     </Col>

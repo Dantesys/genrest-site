@@ -3,17 +3,14 @@ import './Dheader.css';
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory } from 'react-router-dom';
-function DHeader(dado,{history}){
+function CHeader(dado,{history}){
 	history=useHistory();
 	const { rest } = React.useState(dado.rest);
 	function dashboard(){
-		history.push({pathname:"/dashboard"});
-	}
-	function cardapio(){
-		history.push({pathname:"/dashboard/cardapio"});
+		history.push({pathname:"/cliente"});
 	}
 	function config(){
-		history.push({pathname:"/dashboard/config"});
+		history.push({pathname:"/cliente/config"});
 	}
 	function logout(){
 		localStorage.setItem("user",null);
@@ -35,7 +32,6 @@ function DHeader(dado,{history}){
 				<Navbar.Collapse id="navbar">
 					<Nav className="mr-auto">
 						<Nav.Link onClick={dashboard}>Inicio</Nav.Link>
-						<Nav.Link onClick={cardapio}>Cardapio</Nav.Link>
 						<Nav.Link onClick={config}>Configurações</Nav.Link>
 					</Nav>
 					<Navbar.Toggle aria-controls="navbar" />
@@ -48,4 +44,4 @@ function DHeader(dado,{history}){
     );
 }
 
-export default DHeader;
+export default CHeader;
